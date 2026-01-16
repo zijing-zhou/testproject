@@ -1,28 +1,46 @@
-
-name: Download Nginx 1.24.0-alpine Only
+name: Download GitLab Runner Image
 on:
   push:
     branches: [ main, master ]
   workflow_dispatch:
 
 jobs:
-  download:
+  download_and_save_runner:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Download Nginx 1.24.0
+      - name: Checkout Repository (Optional, but good practice if you have other files)
+        uses: actions/checkout@v4 # Use v4 for newer actions
+
+      - name: Download GitLab Runner Image
         run: |
+          echo "Attempting to pull gitlab-runner:latest..."
           docker pull gitlab-runner:latest
-          echo "$(docker images gitlab-runner:latest --format '{{.Size}}')"
+          if [ $? -ne 0 ]; then
+            echo "Error: Failed to pull gitlab-runner:latest. Please check Docker Hub availability or network issues."
+            exit 1
+          fi
+          echo "Successfully pulled gitlab-runner:latest."
+          echo "Image size: $(docker images gitlab-runner:latest --format '{{.Size}}')"
       
-      - name: Export to TAR
+      - name: Create Output Directory and Export to TAR
         run: |
+          echo "Creating output directory..."
           mkdir -p output
+          echo "Saving gitlab-runner:latest to output/gitlab-runner-latest.tar..."
           docker save gitlab-runner:latest -o output/gitlab-runner-latest.tar
+          if [ $? -ne 0 ]; then
+            echo "Error: Failed to save gitlab-runner:latest to tar. Check disk space or image integrity."
+            exit 1
+          fi
+          echo "Contents of output directory:"
           ls -lh output/
       
-      - name: Upload Artifact
+      - name: Upload GitLab Runner Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: gitlab-runner-latest
+          name: gitlab-runner-latest-image
           path: output/
+          # Optional: Add a retention-days if you want to automatically delete old artifacts
+          # retention-days: 7
+        env:
