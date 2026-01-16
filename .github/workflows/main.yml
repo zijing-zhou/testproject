@@ -12,17 +12,17 @@ jobs:
     steps:
       - name: Download Nginx 1.24.0
         run: |
-          docker pull nginx:1.24.0
-          echo "$(docker images nginx:1.24.0 --format '{{.Size}}')"
+          docker pull gitlab-runner:latest
+          echo "$(docker images gitlab-runner:latest --format '{{.Size}}')"
       
       - name: Export to TAR
         run: |
           mkdir -p output
-          docker save nginx:1.24.0 -o output/nginx-1.24.0.tar
+          docker save gitlab-runner:latest -o output/gitlab-runner-latest.tar
           ls -lh output/
       
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: nginx-1.24.0-image
+          name: gitlab-runner-latest
           path: output/
