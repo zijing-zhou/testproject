@@ -14,8 +14,7 @@ jobs:
 
       - name: Download GitLab Runner Image
         run: |
-          echo "Attempting to pull gitlab-runner:latest..."
-          docker pull gitlab-runner:latest
+          docker pull gitlab/gitlab-runner:latest 
           if [ $? -ne 0 ]; then
             echo "Error: Failed to pull gitlab-runner:latest. Please check Docker Hub availability or network issues."
             exit 1
