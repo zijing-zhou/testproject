@@ -27,7 +27,7 @@ jobs:
           echo "Creating output directory..."
           mkdir -p output
           echo "Saving gitlab-runner:latest to output/gitlab-runner-latest.tar..."
-          docker save gitlab-runner:latest -o output/gitlab-runner-latest.tar
+          docker save gitlab/gitlab-runner:latest -o output/gitlab-runner-latest.tar
           if [ $? -ne 0 ]; then
             echo "Error: Failed to save gitlab-runner:latest to tar. Check disk space or image integrity."
             exit 1
