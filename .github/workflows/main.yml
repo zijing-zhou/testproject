@@ -43,4 +43,3 @@ jobs:
           path: output/
           # Optional: Add a retention-days if you want to automatically delete old artifacts
           # retention-days: 7
-        env:
